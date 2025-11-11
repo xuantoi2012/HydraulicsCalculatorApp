@@ -1,0 +1,625 @@
+﻿<Window
+    x:Class="HydraulicsCalculatorApp.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxd="http://schemas.devexpress.com/winfx/2008/xaml/docking"
+    Title="Hydraulics Calculator - Tính toán Thủy lực nhanh"
+    Height="800" Width="1400"
+    WindowStartupLocation="CenterScreen"
+    dx:ThemeManager.ThemeName="VS2019Blue"
+    WindowState="Maximized">
+
+    <DockPanel>
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top" Background="White">
+            <MenuItem Header="File">
+                <MenuItem Header="New" Click="NewButton_Click" InputGestureText="Ctrl+N">
+                    <MenuItem.Icon>
+                        <Image Source="{dx:DXImage Image=New_16x16.png}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open" Click="OpenButton_Click" InputGestureText="Ctrl+O">
+                    <MenuItem.Icon>
+                        <Image Source="{dx:DXImage Image=Open_16x16.png}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save" Click="SaveButton_Click" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Source="{dx:DXImage Image=Save_16x16.png}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Exit" Click="ExitButton_Click" InputGestureText="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Clear" Click="ClearButton_Click">
+                    <MenuItem.Icon>
+                        <Image Source="{dx:DXImage Image=Clear_16x16.png}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Calculate">
+                <MenuItem Header="Calculate Now" Click="CalculateButton_Click" InputGestureText="F5">
+                    <MenuItem.Icon>
+                        <Image Source="{dx:DXImage Image=Apply_16x16.png}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Find y from Q" Click="FindYFromQButton_Click"/>
+                <Separator/>
+                <MenuItem Header="Auto Calculate" IsCheckable="True" IsChecked="True" x:Name="mnuAutoCalculate"/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem Header="Circular Pipe" Click="CircularPipeButton_Click"/>
+                <MenuItem Header="Box Culvert" Click="BoxCulvertButton_Click"/>
+                <MenuItem Header="Trapezoidal Channel" Click="TrapezoidalButton_Click"/>
+                <Separator/>
+                <MenuItem Header="Generate Chart" Click="GenerateChartButton_Click"/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Click="AboutButton_Click">
+                    <MenuItem.Icon>
+                        <Image Source="{dx:DXImage Image=About_16x16.png}" Width="16" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <!-- Tool Bar -->
+        <ToolBarTray DockPanel.Dock="Top" Background="WhiteSmoke">
+            <ToolBar>
+                <Button Click="NewButton_Click" ToolTip="New (Ctrl+N)">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{dx:DXImage Image=New_16x16.png}" Width="16" Height="16" Margin="0,0,3,0"/>
+                        <TextBlock Text="New"/>
+                    </StackPanel>
+                </Button>
+                <Button Click="SaveButton_Click" ToolTip="Save (Ctrl+S)">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{dx:DXImage Image=Save_16x16.png}" Width="16" Height="16" Margin="0,0,3,0"/>
+                        <TextBlock Text="Save"/>
+                    </StackPanel>
+                </Button>
+                <Separator/>
+                <Button Click="CalculateButton_Click" ToolTip="Calculate (F5)">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{dx:DXImage Image=Apply_16x16.png}" Width="16" Height="16" Margin="0,0,3,0"/>
+                        <TextBlock Text="Calculate" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+                <Separator/>
+                <Button Click="CircularPipeButton_Click" ToolTip="Circular Pipe">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{dx:DXImage Image=Circle_16x16.png}" Width="16" Height="16" Margin="0,0,3,0"/>
+                        <TextBlock Text="Circular"/>
+                    </StackPanel>
+                </Button>
+                <Button Click="BoxCulvertButton_Click" ToolTip="Box Culvert">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{dx:DXImage Image=BOSquare_16x16.png}" Width="16" Height="16" Margin="0,0,3,0"/>
+                        <TextBlock Text="Box"/>
+                    </StackPanel>
+                </Button>
+                <Button Click="TrapezoidalButton_Click" ToolTip="Trapezoidal Channel">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{dx:DXImage Image=Polygon_16x16.png}" Width="16" Height="16" Margin="0,0,3,0"/>
+                        <TextBlock Text="Trapezoidal"/>
+                    </StackPanel>
+                </Button>
+                <Separator/>
+                <Button Click="GenerateChartButton_Click" ToolTip="Generate Q-y Chart">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{dx:DXImage Image=Chart_16x16.png}" Width="16" Height="16" Margin="0,0,3,0"/>
+                        <TextBlock Text="Chart"/>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
+        <!-- Status Bar -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Status: " FontWeight="Bold"/>
+                    <TextBlock x:Name="txtStatus" Text="Ready - Circular Pipe Mode"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Mode: "/>
+                    <TextBlock x:Name="txtCurrentMode" Text="Circular Pipe" FontWeight="Bold" Foreground="DarkBlue"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="© 2025 Hydraulics Calculator - by xuantoi2012"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- Main Content with DockPanel -->
+        <dxd:DockLayoutManager>
+            <!-- Left Panel - Inputs -->
+            <dxd:LayoutGroup Orientation="Horizontal">
+                <dxd:LayoutPanel Caption="Inputs / Thông số đầu vào" 
+                                ItemWidth="400"
+                                AllowClose="False"
+                                AllowFloat="True">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="10">
+                            <!-- Culvert Type Selection -->
+                            <GroupBox Header="Type Selection / Chọn loại" Margin="0,0,0,10">
+                                <StackPanel Margin="10">
+                                    <RadioButton x:Name="rbCircular" 
+                                               Content="🔵 Cống tròn (Circular Pipe)" 
+                                               IsChecked="True" 
+                                               Margin="0,5"
+                                               FontSize="12"
+                                               Checked="CulvertTypeChanged"/>
+                                    <RadioButton x:Name="rbBox" 
+                                               Content="⬜ Cống hộp (Box Culvert)" 
+                                               Margin="0,5"
+                                               FontSize="12"
+                                               Checked="CulvertTypeChanged"/>
+                                    <RadioButton x:Name="rbTrapezoidal" 
+                                               Content="🔷 Mương hình thang (Trapezoidal)" 
+                                               Margin="0,5"
+                                               FontSize="12"
+                                               Checked="CulvertTypeChanged"/>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <!-- Unit Selection -->
+                            <GroupBox Header="Units / Đơn vị" Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
+                                    <RadioButton Content="m" IsChecked="True" Margin="10,0" GroupName="Units" Checked="UnitChanged"/>
+                                    <RadioButton Content="mm" Margin="10,0" GroupName="Units" Checked="UnitChanged"/>
+                                    <RadioButton Content="ft" Margin="10,0" GroupName="Units" Checked="UnitChanged"/>
+                                    <RadioButton Content="in" Margin="10,0" GroupName="Units" Checked="UnitChanged"/>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <!-- Circular Pipe Inputs -->
+                            <GroupBox x:Name="grpCircularInputs" Header="⚙️ Circular Pipe Parameters" Margin="0,0,0,10">
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Diameter d₀:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtPipeDiameter" Width="120" EditValue="2.5" EditValueChanged="InputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Material:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:ComboBoxEdit Grid.Row="1" Grid.Column="1" x:Name="cmbCircularMaterial" 
+                                                    EditValue="Concrete pipe, normal (n=0.013)"
+                                                    SelectedIndexChanged="MaterialChanged">
+                                        <dxe:ComboBoxEditItem Content="PVC/Plastic pipe (n=0.009)"/>
+                                        <dxe:ComboBoxEditItem Content="Concrete pipe, good (n=0.012)"/>
+                                        <dxe:ComboBoxEditItem Content="Concrete pipe, normal (n=0.013)"/>
+                                        <dxe:ComboBoxEditItem Content="Concrete pipe, rough (n=0.015)"/>
+                                        <dxe:ComboBoxEditItem Content="Corrugated metal (n=0.024)"/>
+                                        <dxe:ComboBoxEditItem Content="Cast iron (n=0.013)"/>
+                                        <dxe:ComboBoxEditItem Content="Steel pipe (n=0.012)"/>
+                                    </dxe:ComboBoxEdit>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Manning n:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="2" Grid.Column="1" x:Name="txtManningRoughness" EditValue="0.013" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Slope S₀ (%):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="3" Grid.Column="1" x:Name="txtPressureSlope" EditValue="0.5" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Flow depth y/d₀ (%):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="4" Grid.Column="1" x:Name="txtRelativeFlowDepth" EditValue="81" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Length L (m):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="5" Grid.Column="1" x:Name="txtCulvertLength" EditValue="10" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Entrance Ke:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:ComboBoxEdit x:Name="cmbEntranceLoss" Width="150"
+                                                        EditValue="Square edge (Ke=0.5)"
+                                                        SelectedIndexChanged="EntranceLossChanged">
+                                            <dxe:ComboBoxEditItem Content="Square edge (Ke=0.5)"/>
+                                            <dxe:ComboBoxEditItem Content="Rounded edge (Ke=0.2)"/>
+                                            <dxe:ComboBoxEditItem Content="Grooved end (Ke=0.2)"/>
+                                            <dxe:ComboBoxEditItem Content="Projecting (Ke=0.9)"/>
+                                        </dxe:ComboBoxEdit>
+                                        <dxe:TextEdit x:Name="txtEntranceLossCoeff" Width="60" Margin="5,0,0,0" EditValue="0.5" EditValueChanged="InputChanged"/>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Box Culvert Inputs -->
+                            <GroupBox x:Name="grpBoxInputs" Header="⚙️ Box Culvert Parameters" Margin="0,0,0,10" Visibility="Collapsed">
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Width B:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtBoxWidth" Width="120" EditValue="3.0" EditValueChanged="InputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Height H:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtBoxHeight" Width="120" EditValue="2.5" EditValueChanged="InputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Material:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:ComboBoxEdit Grid.Row="2" Grid.Column="1" x:Name="cmbBoxMaterial" 
+                                                    EditValue="Concrete, normal (n=0.013)"
+                                                    SelectedIndexChanged="MaterialChanged">
+                                        <dxe:ComboBoxEditItem Content="Concrete, trowel (n=0.011)"/>
+                                        <dxe:ComboBoxEditItem Content="Concrete, good (n=0.012)"/>
+                                        <dxe:ComboBoxEditItem Content="Concrete, normal (n=0.013)"/>
+                                        <dxe:ComboBoxEditItem Content="Concrete, rough (n=0.015)"/>
+                                        <dxe:ComboBoxEditItem Content="Brick mortar (n=0.014)"/>
+                                    </dxe:ComboBoxEdit>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Manning n:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="3" Grid.Column="1" x:Name="txtBoxManningRoughness" EditValue="0.013" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Slope S₀ (%):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="4" Grid.Column="1" x:Name="txtBoxPressureSlope" EditValue="0.5" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Flow depth y:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtBoxFlowDepth" Width="120" EditValue="2.0" EditValueChanged="InputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Length L (m):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="6" Grid.Column="1" x:Name="txtBoxCulvertLength" EditValue="10" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Entrance Ke:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:ComboBoxEdit x:Name="cmbBoxEntranceLoss" Width="150"
+                                                        EditValue="Square edge (Ke=0.5)"
+                                                        SelectedIndexChanged="EntranceLossChanged">
+                                            <dxe:ComboBoxEditItem Content="Square edge (Ke=0.5)"/>
+                                            <dxe:ComboBoxEditItem Content="Rounded edge (Ke=0.2)"/>
+                                            <dxe:ComboBoxEditItem Content="Wingwalls (Ke=0.4)"/>
+                                        </dxe:ComboBoxEdit>
+                                        <dxe:TextEdit x:Name="txtBoxEntranceLossCoeff" Width="60" Margin="5,0,0,0" EditValue="0.5" EditValueChanged="InputChanged"/>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Trapezoidal Inputs -->
+                            <GroupBox x:Name="grpTrapezoidalInputs" Header="⚙️ Trapezoidal Channel Parameters" Margin="0,0,0,10" Visibility="Collapsed">
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="50"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Bottom width b:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtTrapBottomWidth" Width="120" EditValue="2.0" EditValueChanged="InputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Flow depth y:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtTrapFlowDepth" Width="120" EditValue="1.5" EditValueChanged="InputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Side slope m:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtTrapSideSlope" Width="120" EditValue="1.5" EditValueChanged="InputChanged"/>
+                                        <TextBlock Text="(H:V)" VerticalAlignment="Center" Margin="5,0,0,0" FontStyle="Italic" Foreground="Gray"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Material:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:ComboBoxEdit Grid.Row="3" Grid.Column="1" x:Name="cmbTrapMaterial" 
+                                                    EditValue="Earth channel, clean (n=0.022)"
+                                                    SelectedIndexChanged="MaterialChanged">
+                                        <dxe:ComboBoxEditItem Content="Concrete lined (n=0.013)"/>
+                                        <dxe:ComboBoxEditItem Content="Earth channel, clean (n=0.022)"/>
+                                        <dxe:ComboBoxEditItem Content="Earth with gravel (n=0.025)"/>
+                                        <dxe:ComboBoxEditItem Content="Earth with weeds (n=0.030)"/>
+                                        <dxe:ComboBoxEditItem Content="Natural stream (n=0.030)"/>
+                                        <dxe:ComboBoxEditItem Content="Grass-lined (n=0.035)"/>
+                                    </dxe:ComboBoxEdit>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Manning n:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="4" Grid.Column="1" x:Name="txtTrapManningRoughness" EditValue="0.022" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Slope S₀ (%):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="5" Grid.Column="1" x:Name="txtTrapSlope" EditValue="0.5" EditValueChanged="InputChanged"/>
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" 
+                                             Foreground="DarkBlue" FontSize="10" FontStyle="Italic">
+                                        💡 m=0: Rectangular | m=1: 45° | m=1.5: 33.7° | m=2: 26.6°
+                                    </TextBlock>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Reverse Calculate -->
+                            <GroupBox Header="🔄 Reverse Calculate - Find y from Q" Margin="0,0,0,10">
+                                <StackPanel Margin="10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Target Q:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <dxe:TextEdit x:Name="txtTargetQ" Width="120"/>
+                                            <TextBlock Text="m³/s" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <dx:SimpleButton Content="🔍 Find y from Q" 
+                                                   Height="35" Margin="0,10,0,0"
+                                                   Click="FindYFromQButton_Click"/>
+                                    <TextBlock x:Name="txtReverseResult" 
+                                             TextWrapping="Wrap"
+                                             Margin="0,10,0,0"
+                                             Foreground="DarkGreen"
+                                             FontWeight="Bold"/>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <!-- Calculate Button -->
+                            <dx:SimpleButton Content="⚡ CALCULATE / TÍNH TOÁN" 
+                                           Height="50"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Click="CalculateButton_Click"
+                                           Margin="0,0,0,10"/>
+
+                            <!-- Preview -->
+                            <GroupBox Header="👁️ Preview / Xem trước">
+                                <Border BorderBrush="LightGray" BorderThickness="1" Margin="5">
+                                    <Canvas x:Name="canvasPreview" 
+                                           Width="360" 
+                                           Height="250" 
+                                           Background="White"/>
+                                </Border>
+                            </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </dxd:LayoutPanel>
+
+                <!-- Right Side - Results and Chart -->
+                <dxd:LayoutGroup Orientation="Vertical">
+                    <!-- Results Panel -->
+                    <dxd:LayoutPanel Caption="📊 Results / Kết quả"
+                                    ItemHeight="2*"
+                                    AllowClose="False">
+                        <TabControl>
+                            <TabItem Header="Results Summary">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Margin="15">
+                                        <!-- Flow Parameters -->
+                                        <Expander Header="💧 Flow Parameters / Thông số dòng chảy" IsExpanded="True" Margin="0,0,0,10">
+                                            <Grid Margin="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="120"/>
+                                                    <ColumnDefinition Width="60"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Text="Flow depth, y:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtResultY" IsReadOnly="True" Background="#FFF9E6"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="1" Text="Flow area, a:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtResultA" IsReadOnly="True" Background="#FFF9E6"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="m²" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="2" Text="Full area, A:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtResultA0" IsReadOnly="True" Background="#FFF9E6"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="2" Text="m²" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="3" Text="Relative area, a/A:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtResultRelativeArea" IsReadOnly="True" Background="#FFF9E6"/>
+                                                <TextBlock Grid.Row="3" Grid.Column="2" Text="" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="4" Text="Wetted perimeter, Pw:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtResultPw" IsReadOnly="True" Background="#FFF9E6"/>
+                                                <TextBlock Grid.Row="4" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="5" Text="Hydraulic radius, Rh:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="5" Grid.Column="1" x:Name="txtResultRh" IsReadOnly="True" Background="#FFF9E6"/>
+                                                <TextBlock Grid.Row="5" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="6" Text="Top width, T:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="6" Grid.Column="1" x:Name="txtResultT" IsReadOnly="True" Background="#FFF9E6"/>
+                                                <TextBlock Grid.Row="6" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </Grid>
+                                        </Expander>
+
+                                        <!-- Velocity and Flow -->
+                                        <Expander Header="🚀 Velocity and Flow / Vận tốc và lưu lượng" IsExpanded="True" Margin="0,0,0,10">
+                                            <Grid Margin="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="120"/>
+                                                    <ColumnDefinition Width="60"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="30"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Text="Velocity, v:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtResultV" IsReadOnly="True" Background="#E6F3FF"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="2" Text="m/s" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="1" Text="Velocity head, hv:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtResultHv" IsReadOnly="True" Background="#E6F3FF"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="2" Text="Flow, Q:" VerticalAlignment="Center" FontWeight="Bold" FontSize="13"/>
+                                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtResultQ" IsReadOnly="True" Background="#C8E6C9" FontWeight="Bold" FontSize="13"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="2" Text="m³/s" VerticalAlignment="Center" Margin="5,0,0,0" FontWeight="Bold"/>
+
+                                                <TextBlock Grid.Row="3" Text="Full flow, Q0:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtResultQ0" IsReadOnly="True" Background="#C8E6C9"/>
+                                                <TextBlock Grid.Row="3" Grid.Column="2" Text="m³/s" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="4" Text="Ratio Q/Q0:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtResultQRatio" IsReadOnly="True" Background="#C8E6C9"/>
+                                                <TextBlock Grid.Row="4" Grid.Column="2" Text="" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </Grid>
+                                        </Expander>
+
+                                        <!-- Hydraulic Characteristics -->
+                                        <Expander Header="⚡ Hydraulic Characteristics" IsExpanded="True" Margin="0,0,0,10">
+                                            <Grid Margin="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="120"/>
+                                                    <ColumnDefinition Width="60"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Text="Froude number, F:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtResultF" IsReadOnly="True" Background="#FFE6E6"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="2" Text="" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="1" Text="Shear stress, τ:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtResultTau" IsReadOnly="True" Background="#FFE6E6"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="N/m²" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                            </Grid>
+                                        </Expander>
+
+                                        <!-- Headwater -->
+                                        <Expander Header="🌊 Headwater Depth / Mực nước dâng" IsExpanded="True">
+                                            <Grid Margin="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="120"/>
+                                                    <ColumnDefinition Width="60"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="28"/>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Text="Entrance loss, He:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtResultHe" IsReadOnly="True" Background="#FFE6F0"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="1" Text="Friction loss, Hf:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtResultHf" IsReadOnly="True" Background="#FFE6F0"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="2" Text="Exit loss, Ho:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtResultHo" IsReadOnly="True" Background="#FFE6F0"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="3" Text="Total loss, HL:" VerticalAlignment="Center"/>
+                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtResultHL" IsReadOnly="True" Background="#FFE6F0"/>
+                                                <TextBlock Grid.Row="3" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                                <TextBlock Grid.Row="4" Text="Headwater, HW:" VerticalAlignment="Center" FontWeight="Bold" FontSize="13"/>
+                                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtResultHW" IsReadOnly="True" Background="#FFB84D" FontWeight="Bold" FontSize="13"/>
+                                                <TextBlock Grid.Row="4" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0" FontWeight="Bold"/>
+                                            </Grid>
+                                        </Expander>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+
+                            <TabItem Header="Notes / Ghi chú">
+                                <TextBox x:Name="txtNotes" 
+                                       TextWrapping="Wrap"
+                                       AcceptsReturn="True"
+                                       Margin="10"
+                                       Text="📝 Manning's formula is used for flow calculations.&#x0a;&#x0a;HW = y + hv + He + Hf + Ho&#x0a;&#x0a;• Circular: Partially filled circular pipe&#x0a;• Box: Rectangular open channel&#x0a;• Trapezoidal: Channel with side slopes m (H:V)"/>
+                            </TabItem>
+                        </TabControl>
+                    </dxd:LayoutPanel>
+
+                    <!-- Chart Panel -->
+                    <dxd:LayoutPanel Caption="📈 Q-y Chart / Biểu đồ"
+                                    ItemHeight="1*"
+                                    AllowClose="False">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Horizontal" Margin="10" Grid.Row="0">
+                                <dx:SimpleButton Content="📊 Generate Chart" 
+                                               Click="GenerateChartButton_Click"
+                                               Margin="5"/>
+                                <dx:SimpleButton Content="🗑️ Clear" 
+                                               Click="ClearChartButton_Click"
+                                               Margin="5"/>
+                                <TextBlock x:Name="txtChartInfo" 
+                                         VerticalAlignment="Center" 
+                                         Margin="10,0,0,0"
+                                         FontStyle="Italic"
+                                         Foreground="Gray"/>
+                            </StackPanel>
+
+                            <Border BorderBrush="LightGray" BorderThickness="1" Margin="10" Grid.Row="1">
+                                <Canvas x:Name="canvasChart" Background="White"/>
+                            </Border>
+                        </Grid>
+                    </dxd:LayoutPanel>
+                </dxd:LayoutGroup>
+            </dxd:LayoutGroup>
+        </dxd:DockLayoutManager>
+    </DockPanel>
+</Window>
