@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="HydraulicsCalculatorApp.Views.PreviewPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <GroupBox Header="👁️ Preview / Xem trước">
+        <Border BorderBrush="LightGray" BorderThickness="1" Margin="5">
+            <Canvas x:Name="canvasPreview" 
+                   Width="360" 
+                   Height="250" 
+                   Background="White"/>
+        </Border>
+    </GroupBox>
+</UserControl>

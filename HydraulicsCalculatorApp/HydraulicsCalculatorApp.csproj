@@ -82,6 +82,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Calculators\GutterFlowCalculator.cs" />
+    <Compile Include="Calculators\InletCapacityCalculator.cs" />
+    <Compile Include="Models\GutterFlowResult.cs" />
+    <Compile Include="Models\InletCapacityResult.cs" />
+    <Compile Include="Models\InletType.cs" />
+    <Compile Include="Views\ChartPanel.xaml.cs">
+      <DependentUpon>ChartPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InletDesignPanel.xaml.cs">
+      <DependentUpon>InletDesignPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InputPanels\BoxCulvertInputPanel.xaml.cs">
+      <DependentUpon>BoxCulvertInputPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InputPanels\CircularPipeInputPanel.xaml.cs">
+      <DependentUpon>CircularPipeInputPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InputPanels\TrapezoidalInputPanel.xaml.cs">
+      <DependentUpon>TrapezoidalInputPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PreviewPanel.xaml.cs">
+      <DependentUpon>PreviewPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ResultsPanel.xaml.cs">
+      <DependentUpon>ResultsPanel.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -90,12 +116,47 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Calculators\BoxCulvertCalculator.cs" />
+    <Compile Include="Calculators\CircularPipeCalculator.cs" />
+    <Compile Include="Calculators\TrapezoidalChannelCalculator.cs" />
+    <Compile Include="Helpers\MaterialDatabase.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ChartPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InletDesignPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InputPanels\BoxCulvertInputPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InputPanels\CircularPipeInputPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InputPanels\TrapezoidalInputPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PreviewPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ResultsPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ChartPoint.cs" />
+    <Compile Include="Models\CulvertType.cs" />
+    <Compile Include="Models\FlowResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -127,5 +188,6 @@
   <ItemGroup>
     <Resource Include="Logo.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

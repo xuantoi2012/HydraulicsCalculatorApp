@@ -1,0 +1,385 @@
+﻿<UserControl x:Class="HydraulicsCalculatorApp.Views.InletDesignPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxd="http://schemas.devexpress.com/winfx/2008/xaml/docking">
+
+    <Grid>
+        <dxd:DockLayoutManager>
+            <dxd:LayoutGroup Orientation="Horizontal">
+                <!-- Left Panel - Inputs -->
+                <dxd:LayoutPanel Caption="⚙️ Design Parameters" 
+                                ItemWidth="450"
+                                AllowClose="False">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="10">
+                            <!-- Inlet Type Selection -->
+                            <GroupBox Header="🚰 Inlet Type / Loại hố thu" Margin="0,0,0,10">
+                                <StackPanel Margin="10">
+                                    <RadioButton x:Name="rbGrate" 
+                                               Content="🔲 Grate Inlet (Hố ga có rể)" 
+                                               IsChecked="True" 
+                                               Margin="0,5"
+                                               Checked="InletTypeChanged"/>
+                                    <RadioButton x:Name="rbCurb" 
+                                               Content="📐 Curb Opening (Hố ga mép đá)" 
+                                               Margin="0,5"
+                                               Checked="InletTypeChanged"/>
+                                    <RadioButton x:Name="rbCombination" 
+                                               Content="⚡ Combination (Kết hợp)" 
+                                               Margin="0,5"
+                                               Checked="InletTypeChanged"/>
+                                    <RadioButton x:Name="rbSag" 
+                                               Content="🌊 Sag Inlet (Hố ga điểm thấp)" 
+                                               Margin="0,5"
+                                               Checked="InletTypeChanged"/>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <!-- Street/Gutter Parameters -->
+                            <GroupBox Header="🛣️ Street - Gutter Parameters" Margin="0,0,0,10">
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="Design Flow Q:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtDesignFlow" Width="120" EditValue="50" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="L/s" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="1" Text="Longitudinal Slope S₀:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtLongSlope" Width="120" EditValue="2.0" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="%" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="2" Text="Gutter Cross Slope Sx:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtGutterSlope" Width="120" EditValue="8.0" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="%" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="3" Text="Street Cross Slope Sw:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtStreetSlope" Width="120" EditValue="2.0" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="%" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="4" Text="Gutter Width W:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtGutterWidth" Width="120" EditValue="0.6" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="5" Text="Manning's n:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:TextEdit Grid.Row="5" Grid.Column="1" x:Name="txtManningN" EditValue="0.016" EditValueChanged="OnInputChanged"/>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Grate Inlet Parameters -->
+                            <GroupBox x:Name="grpGrateParams" Header="🔲 Grate Inlet Parameters" Margin="0,0,0,10">
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="Grate Length L:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtGrateLength" Width="120" EditValue="0.6" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="1" Text="Grate Width W:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtGrateWidth" Width="120" EditValue="0.45" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="2" Text="Grate Type:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:ComboBoxEdit Grid.Row="2" Grid.Column="1" x:Name="cmbGrateType" 
+                                                    EditValue="P-50 x 50"
+                                                    SelectedIndexChanged="OnInputChanged">
+                                        <dxe:ComboBoxEditItem Content="Parallel Bars"/>
+                                        <dxe:ComboBoxEditItem Content="Perpendicular Bars"/>
+                                        <dxe:ComboBoxEditItem Content="P-50 x 50"/>
+                                    </dxe:ComboBoxEdit>
+
+                                    <TextBlock Grid.Row="3" Text="Clogging Factor:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtCloggingFactor" Width="120" EditValue="0.5" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="(0.3-0.8)" VerticalAlignment="Center" Margin="5,0,0,0" FontStyle="Italic" Foreground="Gray"/>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Curb Opening Parameters -->
+                            <GroupBox x:Name="grpCurbParams" Header="📐 Curb Opening Parameters" Margin="0,0,0,10" Visibility="Collapsed">
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="Opening Length L:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtCurbLength" Width="120" EditValue="2.0" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="1" Text="Opening Height h:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtCurbHeight" Width="120" EditValue="0.15" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="2" Text="Opening Type:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:ComboBoxEdit Grid.Row="2" Grid.Column="1" x:Name="cmbCurbType" 
+                                                    EditValue="Horizontal"
+                                                    SelectedIndexChanged="OnInputChanged">
+                                        <dxe:ComboBoxEditItem Content="Horizontal"/>
+                                        <dxe:ComboBoxEditItem Content="Vertical"/>
+                                        <dxe:ComboBoxEditItem Content="Depressed"/>
+                                    </dxe:ComboBoxEdit>
+
+                                    <TextBlock Grid.Row="3" Text="Depression a:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtDepression" Width="120" EditValue="0.05" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Spacing Parameters -->
+                            <GroupBox Header="📏 Spacing Analysis" Margin="0,0,0,10">
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="Street Segment Length:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtStreetLength" Width="120" EditValue="100" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="1" Text="Max Allowable Spread:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <dxe:TextEdit x:Name="txtMaxSpread" Width="120" EditValue="2.0" EditValueChanged="OnInputChanged"/>
+                                        <TextBlock Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="2" Text="Area Type:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <dxe:ComboBoxEdit Grid.Row="2" Grid.Column="1" x:Name="cmbAreaType" 
+                                                    EditValue="Residential"
+                                                    SelectedIndexChanged="OnInputChanged">
+                                        <dxe:ComboBoxEditItem Content="Residential (30-60m)"/>
+                                        <dxe:ComboBoxEditItem Content="Commercial (15-30m)"/>
+                                        <dxe:ComboBoxEditItem Content="Industrial (20-40m)"/>
+                                    </dxe:ComboBoxEdit>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Calculate Buttons -->
+                            <dx:SimpleButton Content="⚡ CALCULATE INLET CAPACITY" 
+                                           Height="50"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Click="CalculateButton_Click"
+                                           Margin="0,0,0,10"/>
+
+                            <dx:SimpleButton Content="📊 ANALYZE SPACING" 
+                                           Height="40"
+                                           FontSize="13"
+                                           Click="AnalyzeSpacingButton_Click"
+                                           Margin="0,0,0,10"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </dxd:LayoutPanel>
+
+                <!-- Right Side - Results and Visualization -->
+                <dxd:LayoutGroup Orientation="Vertical">
+                    <!-- Results Panel -->
+                    <dxd:LayoutPanel Caption="📊 Results / Kết quả"
+                                    ItemHeight="1*"
+                                    AllowClose="False">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="15">
+                                <!-- Gutter Flow Results -->
+                                <Expander Header="🌊 Gutter Flow Analysis" IsExpanded="True" Margin="0,0,0,10">
+                                    <Grid Margin="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="220"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="28"/>
+                                            <RowDefinition Height="28"/>
+                                            <RowDefinition Height="28"/>
+                                            <RowDefinition Height="28"/>
+                                            <RowDefinition Height="28"/>
+                                            <RowDefinition Height="28"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Text="Flow Depth at Curb:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtResultDepth" IsReadOnly="True" Background="#E6F3FF"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                        <TextBlock Grid.Row="1" Text="Spread (Water Width):" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtResultSpread" IsReadOnly="True" Background="#E6F3FF"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                        <TextBlock Grid.Row="2" Text="Flow Velocity:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtResultVelocity" IsReadOnly="True" Background="#E6F3FF"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="2" Text="m/s" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                        <TextBlock Grid.Row="3" Text="Flow Area:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtResultFlowArea" IsReadOnly="True" Background="#E6F3FF"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="2" Text="m²" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                        <TextBlock Grid.Row="4" Text="Froude Number:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtResultFroude" IsReadOnly="True" Background="#FFE6E6"/>
+                                        <TextBlock Grid.Row="4" Grid.Column="2" Text="" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                        <TextBlock Grid.Row="5" Text="Spread Ratio:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="txtResultSpreadRatio" IsReadOnly="True" Background="#FFE6E6"/>
+                                        <TextBlock Grid.Row="5" Grid.Column="2" Text="%" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </Grid>
+                                </Expander>
+
+                                <!-- Inlet Capacity Results -->
+                                <Expander Header="🚰 Inlet Capacity Analysis" IsExpanded="True" Margin="0,0,0,10">
+                                    <Grid Margin="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="220"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="28"/>
+                                            <RowDefinition Height="28"/>
+                                            <RowDefinition Height="28"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Text="Intercepted Flow Qi:" VerticalAlignment="Center" FontWeight="Bold" FontSize="13"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtResultIntercepted" IsReadOnly="True" Background="#C8E6C9" FontWeight="Bold" FontSize="13"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="L/s" VerticalAlignment="Center" Margin="5,0,0,0" FontWeight="Bold"/>
+
+                                        <TextBlock Grid.Row="1" Text="Bypass Flow Qb:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtResultBypass" IsReadOnly="True" Background="#FFE6E6"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="L/s" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                        <TextBlock Grid.Row="2" Text="Efficiency E:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtResultEfficiency" IsReadOnly="True" Background="#FFF9E6"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="2" Text="%" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                        <TextBlock Grid.Row="3" Text="Clogging Risk:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtResultClogging" IsReadOnly="True" Background="#FFE6F0"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="2" Text="" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </Grid>
+                                </Expander>
+
+                                <!-- Spacing Results -->
+                                <Expander Header="📏 Spacing Recommendations" IsExpanded="True" Margin="0,0,0,10">
+                                    <Grid Margin="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="220"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="28"/>
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Text="Recommended Spacing:" VerticalAlignment="Center" FontWeight="Bold" FontSize="13"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtResultRecommendedSpacing" IsReadOnly="True" Background="#FFB84D" FontWeight="Bold" FontSize="13"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0" FontWeight="Bold"/>
+
+                                        <TextBlock Grid.Row="1" Text="Maximum Spacing:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtResultMaxSpacing" IsReadOnly="True" Background="#FFE6E6"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                                        <TextBlock Grid.Row="2" Text="Number of Inlets Needed:" VerticalAlignment="Center" FontWeight="Bold"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtResultNumInlets" IsReadOnly="True" Background="#C8E6C9" FontWeight="Bold"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="2" Text="pcs" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </Grid>
+                                </Expander>
+
+                                <!-- Design Notes -->
+                                <Expander Header="📝 Design Notes - Recommendations" IsExpanded="True">
+                                    <TextBox x:Name="txtDesignNotes"
+                                           TextWrapping="Wrap"
+                                           Height="120"
+                                           Margin="10"
+                                           IsReadOnly="True"
+                                           Background="#F0F8FF"
+                                           FontSize="11"/>
+                                </Expander>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </dxd:LayoutPanel>
+
+                    <!-- Visualization Panel -->
+                    <dxd:LayoutPanel Caption="📐 Visualization / Hình ảnh"
+                                    ItemHeight="1*"
+                                    AllowClose="False">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Cross Section View -->
+                            <GroupBox Header="Cross Section / Mặt cắt ngang" Grid.Row="0" Margin="10">
+                                <Border BorderBrush="LightGray" BorderThickness="1" Margin="5">
+                                    <Canvas x:Name="canvasCrossSection" Background="White"/>
+                                </Border>
+                            </GroupBox>
+
+                            <!-- Plan View / Spacing Layout -->
+                            <GroupBox Header="Plan View / Mặt bằng bố trí" Grid.Row="1" Margin="10">
+                                <Border BorderBrush="LightGray" BorderThickness="1" Margin="5">
+                                    <Canvas x:Name="canvasPlanView" Background="White"/>
+                                </Border>
+                            </GroupBox>
+                        </Grid>
+                    </dxd:LayoutPanel>
+                </dxd:LayoutGroup>
+            </dxd:LayoutGroup>
+        </dxd:DockLayoutManager>
+    </Grid>
+</UserControl>

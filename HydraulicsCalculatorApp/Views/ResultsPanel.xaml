@@ -1,0 +1,155 @@
+﻿<UserControl x:Class="HydraulicsCalculatorApp.Views.ResultsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="15">
+            <!-- Flow Parameters -->
+            <Expander Header="💧 Flow Parameters / Thông số dòng chảy" IsExpanded="True" Margin="0,0,0,10">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Flow depth, y:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtY" IsReadOnly="True" Background="#FFF9E6"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="1" Text="Flow area, a:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtA" IsReadOnly="True" Background="#FFF9E6"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="m²" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="2" Text="Full area, A:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtA0" IsReadOnly="True" Background="#FFF9E6"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="m²" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="3" Text="Relative area, a/A:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtRelativeArea" IsReadOnly="True" Background="#FFF9E6"/>
+                    <TextBlock Grid.Row="3" Grid.Column="2" Text="" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="4" Text="Wetted perimeter, Pw:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtPw" IsReadOnly="True" Background="#FFF9E6"/>
+                    <TextBlock Grid.Row="4" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="5" Text="Hydraulic radius, Rh:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" x:Name="txtRh" IsReadOnly="True" Background="#FFF9E6"/>
+                    <TextBlock Grid.Row="5" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="6" Text="Top width, T:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" x:Name="txtT" IsReadOnly="True" Background="#FFF9E6"/>
+                    <TextBlock Grid.Row="6" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </Grid>
+            </Expander>
+
+            <!-- Velocity and Flow -->
+            <Expander Header="🚀 Velocity and Flow / Vận tốc và lưu lượng" IsExpanded="True" Margin="0,0,0,10">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Velocity, v:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtV" IsReadOnly="True" Background="#E6F3FF"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="m/s" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="1" Text="Velocity head, hv:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtHv" IsReadOnly="True" Background="#E6F3FF"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="2" Text="Flow, Q:" VerticalAlignment="Center" FontWeight="Bold" FontSize="13"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtQ" IsReadOnly="True" Background="#C8E6C9" FontWeight="Bold" FontSize="13"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="m³/s" VerticalAlignment="Center" Margin="5,0,0,0" FontWeight="Bold"/>
+
+                    <TextBlock Grid.Row="3" Text="Full flow, Q0:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtQ0" IsReadOnly="True" Background="#C8E6C9"/>
+                    <TextBlock Grid.Row="3" Grid.Column="2" Text="m³/s" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="4" Text="Ratio Q/Q0:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtQRatio" IsReadOnly="True" Background="#C8E6C9"/>
+                    <TextBlock Grid.Row="4" Grid.Column="2" Text="" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </Grid>
+            </Expander>
+
+            <!-- Hydraulic Characteristics -->
+            <Expander Header="⚡ Hydraulic Characteristics" IsExpanded="True" Margin="0,0,0,10">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Froude number, F:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtF" IsReadOnly="True" Background="#FFE6E6"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="1" Text="Shear stress, τ:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtTau" IsReadOnly="True" Background="#FFE6E6"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="N/m²" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </Grid>
+            </Expander>
+
+            <!-- Headwater -->
+            <Expander Header="🌊 Headwater Depth / Mực nước dâng" IsExpanded="True">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Entrance loss, He:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtHe" IsReadOnly="True" Background="#FFE6F0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="1" Text="Friction loss, Hf:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtHf" IsReadOnly="True" Background="#FFE6F0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="2" Text="Exit loss, Ho:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtHo" IsReadOnly="True" Background="#FFE6F0"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="3" Text="Total loss, HL:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtHL" IsReadOnly="True" Background="#FFE6F0"/>
+                    <TextBlock Grid.Row="3" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0"/>
+
+                    <TextBlock Grid.Row="4" Text="Headwater, HW:" VerticalAlignment="Center" FontWeight="Bold" FontSize="13"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtHW" IsReadOnly="True" Background="#FFB84D" FontWeight="Bold" FontSize="13"/>
+                    <TextBlock Grid.Row="4" Grid.Column="2" Text="m" VerticalAlignment="Center" Margin="5,0,0,0" FontWeight="Bold"/>
+                </Grid>
+            </Expander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
